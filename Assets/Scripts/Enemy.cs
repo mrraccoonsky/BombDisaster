@@ -45,9 +45,6 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, _hitBox);
     }
 
-    /// <summary>
-    /// Обработчик события переключения состояния игры
-    /// </summary>
     public void HandleGameStateChange(object sender, GameController.GameState state)
     {
         switch (state)
@@ -74,9 +71,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Обработчик событий, вызываемых спавнером
-    /// </summary>
     public void HandleSpawnerEvent(object sender, BombSpawner.SpawnerEvent spawnerEvent)
     {
         switch (spawnerEvent)
@@ -96,9 +90,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Сопрограмма перемещения противника
-    /// </summary>
     private IEnumerator MovementCoroutine()
     {
         Vector3 clampedPosition;
@@ -121,13 +112,10 @@ public class Enemy : MonoBehaviour
 
             transform.position = clampedPosition;
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
-    /// <summary>
-    /// Сопрограмма смены направления движения противника
-    /// </summary>
     private IEnumerator ChangeDirectionCoroutine()
     {
         while (true)

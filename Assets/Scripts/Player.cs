@@ -42,9 +42,6 @@ public class Player : MonoBehaviour, IPlayer
         Gizmos.DrawWireCube(transform.position, _hitBox);
     }
 
-    /// <summary>
-    /// Обработчик события переключения состояния игры
-    /// </summary>
     public void HandleGameStateChange(object sender, GameController.GameState state)
     {
         switch (state)
@@ -73,25 +70,16 @@ public class Player : MonoBehaviour, IPlayer
         }
     }
 
-    /// <summary>
-    /// Обработчик событий пользовательского ввода, вызываемых через InputManager
-    /// </summary>
     public void HandleMovement(float movement)
     {
         _movement = movement;
     }
 
-    /// <summary>
-    /// Обработка событий изменения количества жизней
-    /// </summary>
     public void HandleLivesChange(object sender, int lives)
     {
         UpdateBuckets(lives);
     }
 
-    /// <summary>
-    /// Сопрограмма перемещения игрока
-    /// </summary>
     private IEnumerator MovementCoroutine()
     {
         Vector3 clampedPosition;
@@ -108,13 +96,10 @@ public class Player : MonoBehaviour, IPlayer
 
             transform.position = clampedPosition;
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
-    /// <summary>
-    /// Метод обновления визуального отображения объекта игрока
-    /// </summary>
     private void UpdateBuckets(int lives)
     {
         switch (lives)
@@ -143,9 +128,6 @@ public class Player : MonoBehaviour, IPlayer
         }
     }
 
-    /// <summary>
-    /// Метод переключения активных вложенных объектов
-    /// </summary>
     private void SwitchBucketState(bool bottomBucketState, bool middleBucketState, bool topBucketState)
     {
         _bottomBucket.gameObject.SetActive(bottomBucketState);

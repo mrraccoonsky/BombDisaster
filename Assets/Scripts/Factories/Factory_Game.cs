@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Factory_Game
+public static class Factory_Game
 {
     public static Level CreateLevel()
     {

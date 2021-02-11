@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Factory_SFX
+public static class Factory_SFX
 {
     public static readonly AudioClip SFX_Drop = Resources.Load<AudioClip>("SFX/Drop");
     public static readonly AudioClip SFX_Collect = Resources.Load<AudioClip>("SFX/Collect");

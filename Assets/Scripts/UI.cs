@@ -20,9 +20,6 @@ public class UI : MonoBehaviour
         ShowPanel(true);
     }
 
-    /// <summary>
-    /// Обработчик события переключения состояния игры
-    /// </summary>
     public void HandleGameStateChange(object sender, GameController.GameState state)
     {
         switch (state)
@@ -60,17 +57,11 @@ public class UI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Обработчик события изменения игрового счета
-    /// </summary>
     public void HandleScoreChange(object sender, int score)
     {
         _score.text = $"{score}";
     }
 
-    /// <summary>
-    /// Метод отображения панели информации
-    /// </summary>
     private void ShowPanel(bool state)
     {
         if (state)
@@ -80,9 +71,6 @@ public class UI : MonoBehaviour
             _textPanel.alpha = 0;
     }
 
-    /// <summary>
-    /// Метод установки необходимого текста в панель информации
-    /// </summary>
     private void SetPanelText(string header, string text)
     {
         _textPanelHeader.text = header;

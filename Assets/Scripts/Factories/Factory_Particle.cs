@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Factory_Particle
+public static class Factory_Particle
 {
     public static readonly GameObject Explosion = Resources.Load<GameObject>("ParticleSystems/Explosion");
     public static readonly GameObject WaterSplash = Resources.Load<GameObject>("ParticleSystems/WaterSplash");

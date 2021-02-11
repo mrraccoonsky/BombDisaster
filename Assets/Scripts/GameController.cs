@@ -4,26 +4,22 @@ using UnityEngine;
 
 public class GameController
 {
-    /// <summary>
-    /// Перечисление возможных состояний игры
-    /// </summary>
     public enum GameState
     {
         Start, Pause, Resume, WaveFailed, GameOver
     }
 
     #region Events
-    public EventHandler<GameState> OnGameStateChange = (sender, e) => { };
-    public EventHandler<int> OnScoreChange = (sender, e) => { };
-    public EventHandler<int> OnLivesChange = (sender, e) => { };
+    public EventHandler<GameState> OnGameStateChange;
+    public EventHandler<int> OnScoreChange;
+    public EventHandler<int> OnLivesChange;
     #endregion
 
     #region Fields
-    private Canvas _canvas;
-    private Camera _renderCamera;
-    private Camera _boundCamera;
-    private Vector2 _screenBounds;
-    private List<LevelData> _levelData;
+    private readonly Canvas _canvas;
+    private readonly Camera _renderCamera;
+    private readonly Camera _boundCamera;
+    private readonly List<LevelData> _levelData;
 
     private InputSystem _inputSystem;
     private UI _ui;
@@ -31,6 +27,8 @@ public class GameController
     private Player _player;
     private Enemy _enemy;
     private BombSpawner _bombSpawner;
+
+    private Vector2 _screenBounds;
 
     private LevelData _currentLevel;
     private int _currentLevelNumber;
@@ -75,7 +73,7 @@ public class GameController
 
         _inputSystem.Game.Start.performed += ctx => StartGame();
         _inputSystem.Game.Pause.performed += ctx => PauseGame();
-        _inputSystem.Game.Confirm.performed += ctx => QuitGame();
+        _inputSystem.Game.Quit.performed += ctx => QuitGame();
 
         _inputSystem.Player.Movement.performed += ctx => _player.HandleMovement(ctx.ReadValue<float>());
         _inputSystem.Player.Movement.canceled += ctx => _player.HandleMovement(0f);
@@ -96,7 +94,7 @@ public class GameController
 
         UpdateLevelData();
 
-        _inputSystem.Game.Confirm.Disable();
+        _inputSystem.Game.Quit.Disable();
         _inputSystem.Game.Start.Disable();
         _inputSystem.Game.Pause.Enable();
 
@@ -112,7 +110,7 @@ public class GameController
             Time.timeScale = 0f;
 
             _inputSystem.Game.Start.Disable();
-            _inputSystem.Game.Confirm.Enable();
+            _inputSystem.Game.Quit.Enable();
 
             OnGameStateChange(this, GameState.Pause);
         }
@@ -124,15 +122,12 @@ public class GameController
             if(_lastStartState)
                 _inputSystem.Game.Start.Enable();
 
-            _inputSystem.Game.Confirm.Disable();
+            _inputSystem.Game.Quit.Disable();
 
             OnGameStateChange(this, GameState.Resume);
         }
     }
 
-    /// <summary>
-    /// Метод, обновляющий значения в нужных полях при сбросе игры
-    /// </summary>
     private void ResetGame()
     {
         _player.transform.position = _level.PlayerSpawn.position;
@@ -149,18 +144,12 @@ public class GameController
         _nextLiveScore = 1000;
     }
 
-    /// <summary>
-    /// Метод, завершающий игру
-    /// </summary>
     private void QuitGame()
     {
         Debug.Log("Quitting");
         Application.Quit();
     }
 
-    /// <summary>
-    /// Метод, обновляющий значения в нужных полях при смене уровня
-    /// </summary>
     public void UpdateLevelData()
     {
         _currentLevel = _levelData[_currentLevelNumber];
@@ -173,10 +162,6 @@ public class GameController
         _bombSpawner.BombSpeed = _currentLevel.BombSpeed;
     }
 
-    /// <summary>
-    /// Метод, получающий информацию о границах экрана с указанной ортогональной камеры
-    /// </summary>
-    /// 
     private Vector2 GetScreenBounds(Camera boundCamera)
     {
         if (boundCamera.enabled == false)
@@ -191,9 +176,6 @@ public class GameController
         return screenBounds;
     }
 
-    /// <summary>
-    /// Обработчик событий, вызываемых классом BombSpawner
-    /// </summary>
     private void HandleSpawnerEvent(object sender, BombSpawner.SpawnerEvent spawnerEvent)
     {
         switch (spawnerEvent)
@@ -239,7 +221,7 @@ public class GameController
 
                 else
                 {
-                    _inputSystem.Game.Confirm.Enable();
+                    _inputSystem.Game.Quit.Enable();
                     OnGameStateChange(this, GameState.GameOver);
                 }
 

@@ -117,7 +117,7 @@ public class @InputSystem : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Confirm"",
+                    ""name"": ""Quit"",
                     ""type"": ""Button"",
                     ""id"": ""dfbd22a1-08b9-4bab-93a6-f1cfd15a64a2"",
                     ""expectedControlType"": ""Button"",
@@ -155,7 +155,7 @@ public class @InputSystem : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard"",
-                    ""action"": ""Confirm"",
+                    ""action"": ""Quit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -177,7 +177,7 @@ public class @InputSystem : IInputActionCollection, IDisposable
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Start = m_Game.FindAction("Start", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
-        m_Game_Confirm = m_Game.FindAction("Confirm", throwIfNotFound: true);
+        m_Game_Quit = m_Game.FindAction("Quit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -262,14 +262,14 @@ public class @InputSystem : IInputActionCollection, IDisposable
     private IGameActions m_GameActionsCallbackInterface;
     private readonly InputAction m_Game_Start;
     private readonly InputAction m_Game_Pause;
-    private readonly InputAction m_Game_Confirm;
+    private readonly InputAction m_Game_Quit;
     public struct GameActions
     {
         private @InputSystem m_Wrapper;
         public GameActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @Start => m_Wrapper.m_Game_Start;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
-        public InputAction @Confirm => m_Wrapper.m_Game_Confirm;
+        public InputAction @Quit => m_Wrapper.m_Game_Quit;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -285,9 +285,9 @@ public class @InputSystem : IInputActionCollection, IDisposable
                 @Pause.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
-                @Confirm.started -= m_Wrapper.m_GameActionsCallbackInterface.OnConfirm;
-                @Confirm.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnConfirm;
-                @Confirm.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnConfirm;
+                @Quit.started -= m_Wrapper.m_GameActionsCallbackInterface.OnQuit;
+                @Quit.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnQuit;
+                @Quit.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnQuit;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -298,9 +298,9 @@ public class @InputSystem : IInputActionCollection, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
-                @Confirm.started += instance.OnConfirm;
-                @Confirm.performed += instance.OnConfirm;
-                @Confirm.canceled += instance.OnConfirm;
+                @Quit.started += instance.OnQuit;
+                @Quit.performed += instance.OnQuit;
+                @Quit.canceled += instance.OnQuit;
             }
         }
     }
@@ -322,6 +322,6 @@ public class @InputSystem : IInputActionCollection, IDisposable
     {
         void OnStart(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-        void OnConfirm(InputAction.CallbackContext context);
+        void OnQuit(InputAction.CallbackContext context);
     }
 }

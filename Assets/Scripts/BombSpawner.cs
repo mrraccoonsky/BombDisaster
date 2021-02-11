@@ -5,16 +5,13 @@ using UnityEngine;
 
 public class BombSpawner : MonoBehaviour
 {
-    /// <summary>
-    /// Перечисление возможных событий, вызываемых спавнером
-    /// </summary>
     public enum SpawnerEvent
     {
         Drop, LastDrop, Catch, WaveCompleted, WaveFailed
     }
 
     #region Events
-    public EventHandler<SpawnerEvent> OnSpawnerEvent = (sender, e) => { };
+    public EventHandler<SpawnerEvent> OnSpawnerEvent;
     #endregion
 
     #region Fields
@@ -22,7 +19,7 @@ public class BombSpawner : MonoBehaviour
     private float _bombSpawnDelay;
     private float _bombSpeed;
 
-    private List<Bomb> _bombs = new List<Bomb>();
+    private readonly List<Bomb> _bombs = new List<Bomb>();
     private Bomb _lastBomb;
 
     private Coroutine _bombSpawnCoroutine;
@@ -60,9 +57,6 @@ public class BombSpawner : MonoBehaviour
     }
     #endregion
 
-    /// <summary>
-    /// Обработчик события переключения состояния игры
-    /// </summary>
     public void HandleGameStateChange(object sender, GameController.GameState state)
     {
         switch (state)
@@ -77,17 +71,15 @@ public class BombSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Обработчик события столкновения бомбы, созданной спавнером
-    /// </summary>
-    private void HandleBombCollision(object sender, CollisionArgs args)
+    private void HandleBombCollision(object sender, bool wasCatched)
     {
-        if (args.WasCatched)
+        if (wasCatched)
         {
             OnSpawnerEvent(this, SpawnerEvent.Catch);
 
-            args.Bomb.OnCollision -= HandleBombCollision;
-            _bombs.Remove(args.Bomb);
+            var bomb = (Bomb)sender;
+            bomb.OnCollision -= HandleBombCollision;
+            _bombs.Remove(bomb);
         }
 
         else
@@ -99,9 +91,6 @@ public class BombSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Сопрограмма спавна бомб по заданным параметрам
-    /// </summary>
     private IEnumerator BombSpawnCoroutine(int bombCount, float bombSpawnDelay)
     {
         int droppedBombs = 0;
@@ -125,9 +114,6 @@ public class BombSpawner : MonoBehaviour
         OnSpawnerEvent(this, SpawnerEvent.WaveCompleted);
     }
 
-    /// <summary>
-    /// Сопрограмма уничтожения всех созданных спавнером бомб
-    /// </summary>
     private IEnumerator BombDestroyCoroutine()
     {
         foreach (var bomb in _bombs)

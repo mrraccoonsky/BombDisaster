@@ -104,7 +104,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Confirm",
+                    "name": "Quit",
                     "type": "Button",
                     "id": "dfbd22a1-08b9-4bab-93a6-f1cfd15a64a2",
                     "expectedControlType": "Button",
@@ -142,7 +142,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Confirm",
+                    "action": "Quit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

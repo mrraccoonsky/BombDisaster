@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Дополнительные аргументы, передаваемые с событием столкновения бомбы
-/// </summary>
 public class CollisionArgs : EventArgs
 {
     public CollisionArgs(Bomb bomb, bool wasCatched)
@@ -21,7 +18,7 @@ public class CollisionArgs : EventArgs
 public class Bomb : MonoBehaviour
 {
     #region Events
-    public EventHandler<CollisionArgs> OnCollision = (sender, e) => { };
+    public EventHandler<bool> OnCollision;
     #endregion
 
     #region Fields
@@ -54,9 +51,6 @@ public class Bomb : MonoBehaviour
         StartCoroutine(CheckCollisionCoroutine());
     }
 
-    /// <summary>
-    /// Сопрограмма перемещения бомбы
-    /// </summary>
     private IEnumerator MovementCoroutine()
     {
         transform.rotation = UnityEngine.Random.rotation;
@@ -65,14 +59,10 @@ public class Bomb : MonoBehaviour
         while (true)
         {
             transform.Translate(Vector3.down * _speed * Time.deltaTime, Space.World);
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
-    /// <summary>
-    /// Сопрограмма проверки наличия препятствий
-    /// </summary>
-    /// <returns></returns>
     private IEnumerator CheckCollisionCoroutine()
     {
         List<Collider2D> _hitResults = new List<Collider2D>();
@@ -94,25 +84,22 @@ public class Bomb : MonoBehaviour
 
                         DestroyBomb();
 
-                        OnCollision(this, new CollisionArgs(this, true));
+                        OnCollision(this, true);
                         break;
                     }
 
                     else
                     {
-                        OnCollision(this, new CollisionArgs(this, false));
+                        OnCollision(this, false);
                         break;
                     }
                 }
             }
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
-    /// <summary>
-    /// Метод уничтожения бомбы
-    /// </summary>
     public void DestroyBomb()
     {
         Destroy(gameObject);
